@@ -1,0 +1,43 @@
+#!/usr/bin/with-contenv bash
+
+PUID=${PUID:-911}
+PGID=${PGID:-911}
+
+groupmod -o -g "$PGID" abc
+usermod -o -u "$PUID" abc
+
+echo '
+###############                 Powered by Alpine Linux                   ###############
+
+ █████╗ ██╗     ██████╗ ██╗███╗   ██╗███████╗    ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
+██╔══██╗██║     ██╔══██╗██║████╗  ██║██╔════╝    ██║     ██║████╗  ██║██║   ██║╚██╗██╔╝
+███████║██║     ██████╔╝██║██╔██╗ ██║█████╗      ██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝ 
+██╔══██║██║     ██╔═══╝ ██║██║╚██╗██║██╔══╝      ██║     ██║██║╚██╗██║██║   ██║ ██╔██╗ 
+██║  ██║███████╗██║     ██║██║ ╚████║███████╗    ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═══╝╚══════╝    ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝
+                                                                                       
+###  Info  ###
+
+OS: Alpine
+Source: http://nl.alpinelinux.org/alpine
+Based on latest stable alpine-minirootfs (Currently: ${REL})
+Added:s6-overlay
+
+Rebuild every week.
+
+## THEcontainers ##
+-------------------------------------
+GID/UID
+-------------------------------------'
+echo "
+User uid:    $(id -u abc)
+User gid:    $(id -g abc)
+-------------------------------------
+"
+chown abc:abc /app
+chown abc:abc /config
+chown abc:abc /defaults
+
+# Fix some permissions for copied files
+chmod -R 500 /etc/services.d/
+chmod -R 500 /etc/cont-init.d/
